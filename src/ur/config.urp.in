@@ -1,1 +1,1 @@
-include @INCLUDE@/ajaxUpload.h
+include ../../include/ajaxUpload.h
