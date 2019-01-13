@@ -10,6 +10,7 @@ fun choice b =
     return <xml><body>
       <button value="Create new widget"
               onclick={fn _ => au <- AjaxUpload.render {SubmitLabel = if b then None else Some "Upload it!",
+                                                        Accept = "",
                                                         OnBegin = set status <xml>Uploading</xml>,
                                                         OnError = set status <xml><strong>Upload failed!</strong></xml>,
                                                         OnSuccess = fn h =>

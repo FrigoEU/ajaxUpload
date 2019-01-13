@@ -21,7 +21,9 @@ val render : {SubmitLabel : option string,
               (* Run this when an upload begins. *)
               OnSuccess : handle -> transaction {},
               (* Run this after a successful upload. *)
-              OnError : transaction {}
-              (* Run this when upload fails (probably because of an unsupported MIME type). *)}
+              OnError : transaction {},
+              (* Run this when upload fails (probably because of an unsupported MIME type). *)
+              Accept: string
+             }
              -> transaction xbody
 (* Produce HTML for a file upload control *)

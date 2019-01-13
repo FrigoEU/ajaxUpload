@@ -40,7 +40,7 @@ fun peek h =
                 None => NotFound
               | Some r => Found r)
 
-fun render {SubmitLabel = sl, OnBegin = ob, OnSuccess = os, OnError = oe} =
+fun render {SubmitLabel = sl, OnBegin = ob, OnSuccess = os, OnError = oe, Accept = ac} =
     iframeId <- fresh;
     submitId <- fresh;
     submitId' <- return (AjaxUploadFfi.idToString submitId);
@@ -58,7 +58,7 @@ fun render {SubmitLabel = sl, OnBegin = ob, OnSuccess = os, OnError = oe} =
     in
         return <xml>
           <form>
-            <upload{#File}/>
+            <upload{#File} accept={ac}/>
             <submit value={Option.get "" sl} action={uploadAction} id={submitId} onmousedown={fn _ => ob} onkeydown={fn ev => os ev.KeyCode} onmouseup={fn _ => oe}/>
           </form>
           {AjaxUploadFfi.tweakForm (Option.isNone sl) iframeId submitId}
