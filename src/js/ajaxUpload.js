@@ -39,7 +39,9 @@ function tweakFormCode(autoSubmit, iframeId, submitId, maxFileSize) {
     function checkFileSize(ev){
       if (ev.target && ev.target.files && ev.target.files[0] && ev.target.files[0].size > maxFileSize){
         subm.withFileSizeError();
+        return false;
       }
+      return true;
     }
     for (var node = subm.previousSibling; node.tagName != "INPUT"; node = node.previousSibling);
     node.onchange = function(ev){
@@ -49,8 +51,8 @@ function tweakFormCode(autoSubmit, iframeId, submitId, maxFileSize) {
     if (autoSubmit) {
         subm.style.visibility = "hidden";
         node.onchange = function(ev) {
-          checkFileSize(ev);
-          subm.parentNode.submit();
+          var ok = checkFileSize(ev);
+          if (ok) { subm.parentNode.submit(); };
         };
     }
 }
