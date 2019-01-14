@@ -21,8 +21,9 @@ val render : {SubmitLabel : option string,
               (* Run this when an upload begins. *)
               OnSuccess : handle -> transaction {},
               (* Run this after a successful upload. *)
-              OnError : transaction {},
-              (* Run this when upload fails (probably because of an unsupported MIME type). *)
+              OnMimeTypeError : transaction {},
+              OnFileSizeError : transaction {},
+              MaxFileSize: int,
               Accept: string
              }
              -> transaction xbody

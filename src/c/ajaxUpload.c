@@ -2,7 +2,7 @@
 
 #include <ajaxUpload.h>
 
-uw_Basis_string uw_AjaxUploadFfi_tweakForm(uw_context ctx, uw_Basis_bool autoSubmit, uw_Basis_string iframeId, uw_Basis_string submitId) {
+uw_Basis_string uw_AjaxUploadFfi_tweakForm(uw_context ctx, uw_Basis_bool autoSubmit, uw_Basis_string iframeId, uw_Basis_string submitId, uw_Basis_int maxFileSize) {
   return uw_Basis_mstrcat(ctx,
                           "<iframe id=\"",
                           iframeId,
@@ -12,9 +12,13 @@ uw_Basis_string uw_AjaxUploadFfi_tweakForm(uw_context ctx, uw_Basis_bool autoSub
                           submitId,
                           "\"); subm.parentNode.target = \"",
                           iframeId,
-                          "\"; var onSub = subm.onmousedown; subm.onmousedown = undefined; subm.parentNode.onsubmit = function() { window.top.event = {}; onSub(); return true; }; subm.withHandle = subm.onkeydown; subm.onkeydown = undefined; subm.withError = subm.onmouseup; subm.onmouseup = undefined; ",
+                          "\"; var onSub = subm.onmousedown; subm.onmousedown = undefined; subm.parentNode.onsubmit = function() { window.top.event = {}; onSub(); return true; }; subm.withHandle = subm.onkeydown; subm.onkeydown = undefined; subm.withMimeTypeError = subm.onmouseup; subm.onmouseup = undefined; subm.withFileSizeError = subm.onkeyup; subm.onkeyup = undefined; ",
+                          "function checkFileSize(ev){if (ev.target && ev.target.files && ev.target.files[0] && ev.target.files[0].size > ", uw_Basis_htmlifyInt(ctx, maxFileSize) , "){subm.withFileSizeError();}}",
+                          "for (var node = subm.previousSibling; node.tagName != \"INPUT\"; node = node.previousSibling);",
+                          "node.onchange = function(ev){checkFileSize(ev);};",
+
                           autoSubmit
-                          ? "subm.style.visibility = \"hidden\"; for (var node = subm.previousSibling; node.tagName != \"INPUT\"; node = node.previousSibling); node.onchange = function() { subm.parentNode.submit(); }; "
+                          ? "subm.style.visibility = \"hidden\"; node.onchange = function(ev) { checkFileSize(ev); subm.parentNode.submit(); }; "
                           : "",
                           "</script>",
                           NULL);
@@ -30,11 +34,18 @@ uw_Basis_string uw_AjaxUploadFfi_notifySuccess(uw_context ctx, uw_Basis_string s
                           NULL);
 }
 
-uw_Basis_string uw_AjaxUploadFfi_notifyError(uw_context ctx, uw_Basis_string submitId) {
+uw_Basis_string uw_AjaxUploadFfi_notifyMimeTypeError(uw_context ctx, uw_Basis_string submitId) {
   return uw_Basis_mstrcat(ctx,
                           "<script type=\"text/javascript\">var subm = window.top.document.getElementById(\"",
                           submitId,
-                          "\"); window.top.event = {}; subm.withError(); </script>",
+                          "\"); window.top.event = {}; subm.withMimeTypeError(); </script>",
+                          NULL);
+}
+uw_Basis_string uw_AjaxUploadFfi_notifyFileSizeError(uw_context ctx, uw_Basis_string submitId) {
+  return uw_Basis_mstrcat(ctx,
+                          "<script type=\"text/javascript\">var subm = window.top.document.getElementById(\"",
+                          submitId,
+                          "\"); window.top.event = {}; subm.withFileSizeError(); </script>",
                           NULL);
 }
 

@@ -1,4 +1,4 @@
-function tweakFormCode(autoSubmit, iframeId, submitId) {
+function tweakFormCode(autoSubmit, iframeId, submitId, maxFileSize) {
     var subm = document.getElementById(submitId);
     if (subm == null && thisScript != null && thisScript.parentNode != null && thisScript.parentNode.getElementsByTagName) {
         var subms = thisScript.parentNode.getElementsByTagName("input");
@@ -27,19 +27,35 @@ function tweakFormCode(autoSubmit, iframeId, submitId) {
         subm.onkeydown = undefined;
     }
 
-    if (subm.withError == undefined) {
-        subm.withError = subm.onmouseup;
+    if (subm.withMimeTypeError == undefined) {
+        subm.withMimeTypeError = subm.onmouseup;
         subm.onmouseup = undefined;
     }
+    if (subm.withFileSizeError == undefined) {
+      subm.withFileSizeError = subm.onkeyup;
+      subm.onkeyup = undefined;
+    }
+
+    function checkFileSize(ev){
+      if (ev.target && ev.target.files && ev.target.files[0] && ev.target.files[0].size > maxFileSize){
+        subm.withFileSizeError();
+      }
+    }
+    for (var node = subm.previousSibling; node.tagName != "INPUT"; node = node.previousSibling);
+    node.onchange = function(ev){
+      checkFileSize(ev);
+    };
 
     if (autoSubmit) {
         subm.style.visibility = "hidden";
-        for (var node = subm.previousSibling; node.tagName != "INPUT"; node = node.previousSibling);
-        node.onchange = function() { subm.parentNode.submit(); };
+        node.onchange = function(ev) {
+          checkFileSize(ev);
+          subm.parentNode.submit();
+        };
     }
 }
 
-function tweakForm(autoSubmit, iframeId, submitId) {
+function tweakForm(autoSubmit, iframeId, submitId, maxFileSize) {
     return "<iframe id=\""
         + iframeId
         + "\" name=\""
@@ -50,6 +66,8 @@ function tweakForm(autoSubmit, iframeId, submitId) {
         + iframeId
         + "\",\""
         + submitId
+        + "\",\""
+        + maxFileSize
         + "\");</script>";
 }
 
