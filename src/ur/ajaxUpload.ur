@@ -59,7 +59,7 @@ fun render {SubmitLabel = sl, OnBegin = ob, OnSuccess = os, OnMimeTypeError = on
         return <xml>
           <form>
             <upload{#File} accept={ac}/>
-            <submit value={Option.get "" sl} action={uploadAction} id={submitId} onmousedown={fn _ => ob} onkeydown={fn ev => os ev.KeyCode} onmouseup={fn _ => onMTE} onkeyup={fn _ => onFSE}/>
+            <submit value={Option.get "" sl} action={uploadAction} id={submitId} onfocus={ob} onkeydown={fn ev => os ev.KeyCode} onblur={onMTE} onkeyup={fn _ => onFSE}/>
           </form>
           {AjaxUploadFfi.tweakForm (Option.isNone sl) iframeId submitId maxFileSize}
         </xml>
