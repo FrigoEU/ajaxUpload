@@ -27,7 +27,7 @@ fun claim h =
                         WHERE scratch.Handle = {[h]});
     case ro of
         None => return NotFound
-      | Some r =>
+      | Some (r: {Filename: option string, MimeType: string, Content: blob}) =>
         dml (DELETE FROM scratch
              WHERE Handle = {[h]});
         return (Found r)
