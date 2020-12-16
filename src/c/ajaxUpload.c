@@ -12,7 +12,7 @@ uw_Basis_string uw_AjaxUploadFfi_tweakForm(uw_context ctx, uw_Basis_bool autoSub
                           submitId,
                           "\"); subm.parentNode.target = \"",
                           iframeId,
-                          "\"; var onSub = subm.onfocus; subm.onfocus = undefined; subm.parentNode.onsubmit = function() { window.top.event = {}; onSub(); return true; }; subm.withHandle = subm.onkeydown; subm.onkeydown = undefined; subm.withMimeTypeError = subm.onblur; subm.onblur = undefined; subm.withFileSizeError = subm.onkeyup; subm.onkeyup = undefined; ",
+                          "\"; subm.begin = subm.onfocus; subm.onfocus = undefined; subm.parentNode.onsubmit = function() { window.top.event = {}; subm.begin(); return true; }; subm.withHandle = subm.onkeydown; subm.onkeydown = undefined; subm.withMimeTypeError = subm.onblur; subm.onblur = undefined; subm.withFileSizeError = subm.onkeyup; subm.onkeyup = undefined; ",
                           "function checkFileSize(ev){if (ev.target && ev.target.files && ev.target.files[0] && ev.target.files[0].size > ", uw_Basis_htmlifyInt(ctx, maxFileSize) , "){subm.withFileSizeError(ev);}}",
                           "for (var node = subm.previousSibling; node.tagName != \"INPUT\"; node = node.previousSibling);",
                           "node.onchange = function(ev){checkFileSize(ev);};",
