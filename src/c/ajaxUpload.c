@@ -18,7 +18,7 @@ uw_Basis_string uw_AjaxUploadFfi_tweakForm(uw_context ctx, uw_Basis_bool autoSub
                           "node.onchange = function(ev){checkFileSize(ev);};",
 
                           autoSubmit
-                          ? "subm.style.visibility = \"hidden\"; node.onchange = function(ev) { var ok = checkFileSize(ev); if ok {subm.parentNode.submit(); }; }; "
+                          ? "subm.style.visibility = \"hidden\"; node.onchange = function(ev) { var ok = checkFileSize(ev); if ok { if (subm.begin) { subm.begin(); } subm.parentNode.submit(); }; }; "
                           : "",
                           "</script>",
                           NULL);

@@ -52,7 +52,12 @@ function tweakFormCode(autoSubmit, iframeId, submitId, maxFileSize) {
         subm.style.visibility = "hidden";
         node.onchange = function(ev) {
           var ok = checkFileSize(ev);
-          if (ok) { subm.parentNode.submit(); };
+          if (ok) {
+            if (subm.begin){
+              subm.begin(); // calling submit manually doesn't emit onsubmit event
+            }
+            subm.parentNode.submit();
+          };
         };
     }
 }
