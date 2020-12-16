@@ -53,10 +53,10 @@ function tweakFormCode(autoSubmit, iframeId, submitId, maxFileSize) {
         node.onchange = function(ev) {
           var ok = checkFileSize(ev);
           if (ok) {
+            subm.parentNode.submit();
             if (subm.begin){
               subm.begin(); // calling submit manually doesn't emit onsubmit event
             }
-            subm.parentNode.submit();
           };
         };
     }
